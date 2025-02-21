@@ -120,7 +120,16 @@ void CGDIPlusEffectView::OnEditPaste()
 	auto hBmp = (HBITMAP)GetClipboardData(CF_BITMAP);
 	if (hBmp)
 	{
-		m_pBmp.reset(new Gdiplus::Bitmap(hBmp, nullptr));
+		//m_pBmp.reset(new Gdiplus::Bitmap(hBmp, nullptr));
+
+		Gdiplus::Bitmap bmp(hBmp, nullptr);
+		auto cx = bmp.GetWidth();
+		auto cy = bmp.GetHeight();
+		m_pBmp.reset(new Gdiplus::Bitmap(cx, cy, PixelFormat32bppARGB));
+
+		Gdiplus::Graphics gg(m_pBmp.get());
+
+		gg.DrawImage(&bmp, 0, 0);
 	}
 	else
 	{
